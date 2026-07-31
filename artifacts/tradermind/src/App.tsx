@@ -279,6 +279,14 @@ function AppContent() {
 }
 
 // ── App اصلی ────────────────────────────────────────────
+// Use hash-based routing for:
+//   • Electron (file:// protocol) — no server, can't use History API
+//   • Capacitor/Android (base="./" in vite.electron.config.ts) — static file serving
+// Use History API for web browsers (Replit preview, deployed PWA).
+const useHashRouter =
+  window.location.protocol === 'file:' ||
+  import.meta.env.BASE_URL === './';
+
 function App() {
   return (
     <ErrorBoundary>
@@ -286,8 +294,8 @@ function App() {
         <ThemeProvider>
           <TooltipProvider>
             <WouterRouter
-              hook={window.location.protocol === 'file:' ? useElectronHashLocation : undefined}
-              base={window.location.protocol === 'file:' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '')}
+              hook={useHashRouter ? useElectronHashLocation : undefined}
+              base={useHashRouter ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '')}
             >
               <AppContent />
             </WouterRouter>

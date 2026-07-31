@@ -4,7 +4,7 @@
   "description": "Trader OS — Advanced Trading Operating System (ژورنال معاملاتی آفلاین)",
   "private": true,
   "type": "module",
-  "main": "electron/dist/main.js",
+  "main": "electron/main.cjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/REZASLMY/Tradermind.for.pc.64bit.git"
@@ -17,7 +17,7 @@
     "test": "vitest run --config vitest.config.ts",
     "electron:build:vite": "vite build --config vite.electron.config.ts",
     "electron:compile": "tsc --project tsconfig.electron.json",
-    "electron:build:win": "pnpm run electron:build:vite && pnpm run electron:compile && electron-builder --win --x64 --config electron-builder.json --publish never",
+    "electron:build:win": "pnpm run electron:build:vite && electron-builder --win --x64 --config electron-builder.json --publish never",
     "electron:build:mac": "pnpm run electron:build:vite && pnpm run electron:compile && electron-builder --mac --config electron-builder.json --publish never",
     "cap:sync": "cap sync",
     "cap:android": "cap open android"

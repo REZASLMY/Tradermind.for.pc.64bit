@@ -9,12 +9,13 @@
   },
   "files": [
     "dist/public/**/*",
-    "electron/dist/**/*",
+    "electron/main.cjs",
+    "electron/preload.cjs",
     "public/icon.png",
     "package.json"
   ],
   "extraMetadata": {
-    "main": "electron/dist/main.js"
+    "main": "electron/main.cjs"
   },
   "win": {
     "target": [
