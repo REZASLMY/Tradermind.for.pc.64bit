@@ -32,9 +32,7 @@
     "allowToChangeInstallationDirectory": true,
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
-    "shortcutName": "Trader OS",
-    "installerLanguages": ["PersianStandard", "English"],
-    "language": "1065"
+    "shortcutName": "Trader OS"
   },
   "mac": {
     "target": [
