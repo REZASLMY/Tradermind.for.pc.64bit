@@ -2,6 +2,7 @@
   "appId": "com.traderos.app",
   "productName": "Trader OS",
   "copyright": "Copyright © 2025 Trader OS",
+  "asar": false,
   "directories": {
     "output": "dist-electron",
     "buildResources": "public"

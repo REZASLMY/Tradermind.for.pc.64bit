@@ -21,29 +21,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Fix: Remove Linux-only pnpm overrides that block Windows native modules
-      # The pnpm-workspace.yaml excludes win32 packages for Replit (Linux) environment.
-      # On Windows runner we need them for Rollup, esbuild, lightningcss, etc.
+      # Fix: Remove Linux-only pnpm overrides that block Windows native modules.
+      # pnpm-workspace.yaml has overrides like "rollup>@rollup/rollup-win32-x64-msvc": "-"
+      # that exclude Windows packages for Replit's Linux env. On Windows runner they must be removed.
       - name: Fix pnpm-workspace.yaml for Windows build
-        shell: python
+        shell: pwsh
         run: |
-          with open('pnpm-workspace.yaml', 'r', encoding='utf-8') as f:
-              lines = f.readlines()
-          
-          filtered = []
-          for line in lines:
-              # Remove overrides that block Windows native binary packages
-              stripped = line.strip().strip('"').strip("'")
-              if ('win32' in line or 'msvc' in line) and 'override' not in line.lower() and stripped.startswith('"') or (
-                  ('win32' in line or 'msvc' in line) and ':' in line and '"-"' in line
-              ):
-                  continue  # skip this override line
-              filtered.append(line)
-          
-          with open('pnpm-workspace.yaml', 'w', encoding='utf-8') as f:
-              f.writelines(filtered)
-          
-          print('Cleaned win32 overrides from pnpm-workspace.yaml')
+          $content = Get-Content 'pnpm-workspace.yaml' -Raw
+          # Remove lines that set win32/msvc packages to "-" (Linux-only exclusions)
+          $lines = $content -split "`n"
+          $filtered = $lines | Where-Object {
+            -not ($_ -match 'win32' -and $_ -match '"-"') -and
+            -not ($_ -match 'msvc'  -and $_ -match '"-"')
+          }
+          $filtered -join "`n" | Set-Content 'pnpm-workspace.yaml'
+          Write-Host "Cleaned win32/msvc overrides from pnpm-workspace.yaml"
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
