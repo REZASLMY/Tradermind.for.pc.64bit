@@ -1,0 +1,45 @@
+{
+  "appId": "com.traderos.app",
+  "productName": "Trader OS",
+  "copyright": "Copyright © 2025 Trader OS",
+  "directories": {
+    "output": "dist-electron",
+    "buildResources": "public"
+  },
+  "files": [
+    "dist/public/**/*",
+    "electron/dist/**/*",
+    "public/icon.png",
+    "package.json"
+  ],
+  "extraMetadata": {
+    "main": "electron/dist/main.js"
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "public/icon.png",
+    "artifactName": "TraderOS-Setup-${version}.exe"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Trader OS",
+    "installerLanguages": ["PersianStandard", "English"],
+    "language": "1065"
+  },
+  "mac": {
+    "target": [
+      { "target": "dmg", "arch": ["x64", "arm64"] }
+    ],
+    "icon": "public/icon.png",
+    "category": "public.app-category.finance"
+  }
+}

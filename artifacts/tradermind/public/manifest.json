@@ -1,0 +1,27 @@
+{
+  "name": "Trader OS",
+  "short_name": "TraderOS",
+  "description": "Advanced Trading Operating System — ژورنال معاملاتی آفلاین",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1117",
+  "theme_color": "#c9a84c",
+  "lang": "fa",
+  "dir": "rtl",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

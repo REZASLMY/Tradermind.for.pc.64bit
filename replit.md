@@ -1,45 +1,67 @@
-# [Project name]
+# Trader OS — Advanced Trading Operating System
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+ژورنال معاملاتی آفلاین با قابلیت ثبت، آنالیز و بهبود عملکرد معاملاتی. قابل نصب روی ویندوز ۱۱ (۶۴ بیت) و اندروید.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm --filter @workspace/tradermind run dev` — اجرای برنامه در مرورگر (Vite dev server)
+- `pnpm --filter @workspace/api-server run dev` — اجرای API server
+- `pnpm run typecheck` — بررسی TypeScript
+- `pnpm run build` — بیلد کامل
+
+## Build for Distribution (via GitHub Actions)
+
+بیلد فایل‌های نصبی از طریق GitHub Actions اتفاق می‌افتد:
+
+- **Windows EXE**: push به main یا tag `v*` → اجرای `.github/workflows/build-windows.yml`
+- **Android APK**: push به main یا tag `v*` → اجرای `.github/workflows/build-android.yml`
+
+### ساخت ریلیز
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+سپس GitHub Actions به صورت خودکار `setup.exe` و `APK` می‌سازد و در Releases قرار می‌دهد.
 
 ## Stack
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- pnpm workspaces, Node.js 20, TypeScript 5.9
+- UI: React 19 + Vite + Tailwind CSS v4
+- Desktop: Electron (for Windows/Mac installer)
+- Mobile: Capacitor (for Android APK)
+- DB: Dexie (IndexedDB — fully offline)
+- State: Zustand
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/tradermind/` — برنامه اصلی Trader OS
+- `artifacts/tradermind/electron/` — کد Electron (main process)
+- `artifacts/tradermind/src/` — کد React (renderer process)
+- `artifacts/tradermind/public/icon.png` — آیکون برنامه (Trader OS logo)
+- `artifacts/tradermind/electron-builder.json` — تنظیمات بیلد ویندوز/مک
+- `artifacts/tradermind/capacitor.config.ts` — تنظیمات اندروید
+- `.github/workflows/build-windows.yml` — CI برای ساخت setup.exe
+- `.github/workflows/build-android.yml` — CI برای ساخت APK
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
-
-## Product
-
-_Describe the high-level user-facing capabilities of this app once they exist._
+- **آفلاین اول**: تمام داده‌ها در IndexedDB (Dexie) ذخیره می‌شوند. نیاز به اینترنت ندارد.
+- **Hash routing**: برای Electron (file:// protocol) از hash-based routing استفاده می‌شود.
+- **دو vite config**: `vite.config.ts` برای Replit (نیاز به PORT/BASE_PATH) و `vite.electron.config.ts` برای بیلد Electron/Capacitor (base="./" برای file://).
+- **GitHub Actions fix**: pnpm-workspace.yaml تنظیمات خاص Linux دارد که win32 packages را حذف می‌کند. در GitHub Actions این تنظیمات قبل از build حذف می‌شوند.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- آیکون: Trader OS logo (تصویر ارسالی)
+- مخزن GitHub: https://github.com/REZASLMY/Tradermind.for.pc.64bit
+- ویندوز ۱۱ x64، اندروید APK
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- **باگ اصلی**: `pnpm-workspace.yaml` overrides های `win32>*: "-"` باعث می‌شوند rollup روی Windows نتواند native module پیدا کند. GitHub Actions workflow این را با Python script قبل از install حذف می‌کند.
+- برای بیلد electron از `vite.electron.config.ts` استفاده کن (نه `vite.config.ts`).
+- برای اندروید: Capacitor در GitHub Actions نصب و تنظیم می‌شود (نیاز به commit کردن `android/` folder نیست).
 
 ## Pointers
 
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- See the `pnpm-workspace` skill for workspace structure

@@ -1,0 +1,122 @@
+name: Build Windows Installer (setup.exe)
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g. 1.0.0)'
+        required: false
+        default: '1.0.0'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Fix: Remove Linux-only pnpm overrides that block Windows native modules
+      # The pnpm-workspace.yaml excludes win32 packages for Replit (Linux) environment.
+      # On Windows runner we need them for Rollup, esbuild, lightningcss, etc.
+      - name: Fix pnpm-workspace.yaml for Windows build
+        shell: python
+        run: |
+          with open('pnpm-workspace.yaml', 'r', encoding='utf-8') as f:
+              lines = f.readlines()
+          
+          filtered = []
+          for line in lines:
+              # Remove overrides that block Windows native binary packages
+              stripped = line.strip().strip('"').strip("'")
+              if ('win32' in line or 'msvc' in line) and 'override' not in line.lower() and stripped.startswith('"') or (
+                  ('win32' in line or 'msvc' in line) and ':' in line and '"-"' in line
+              ):
+                  continue  # skip this override line
+              filtered.append(line)
+          
+          with open('pnpm-workspace.yaml', 'w', encoding='utf-8') as f:
+              f.writelines(filtered)
+          
+          print('Cleaned win32 overrides from pnpm-workspace.yaml')
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false --ignore-scripts=false
+
+      - name: Build Vite (Electron config — no PORT/BASE_PATH required)
+        working-directory: artifacts/tradermind
+        run: pnpm run electron:build:vite
+
+      - name: Compile Electron TypeScript
+        working-directory: artifacts/tradermind
+        run: pnpm run electron:compile
+
+      - name: Build Windows installer (electron-builder)
+        working-directory: artifacts/tradermind
+        run: pnpm exec electron-builder --win --x64 --config electron-builder.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: List output files
+        shell: bash
+        working-directory: artifacts/tradermind
+        run: |
+          echo "=== dist-electron contents ==="
+          find dist-electron -type f -name "*.exe" -o -name "*.yml" | sort
+
+      - name: Upload setup.exe as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TraderOS-Windows-Setup
+          path: artifacts/tradermind/dist-electron/*.exe
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/tradermind/dist-electron/*.exe
+          name: "Trader OS ${{ github.ref_name }}"
+          body: |
+            ## Trader OS — Advanced Trading Operating System
+            
+            ### نصب روی ویندوز ۱۱ (۶۴ بیت)
+            فایل `TraderOS-Setup-*.exe` را دانلود و اجرا کنید.
+            
+            **ویژگی‌ها:**
+            - ژورنال معاملاتی کامل
+            - آنالیز عملکرد
+            - مدیریت ریسک
+            - بدون نیاز به اینترنت (آفلاین)
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
