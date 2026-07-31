@@ -5,6 +5,10 @@
   "private": true,
   "type": "module",
   "main": "electron/dist/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/REZASLMY/Tradermind.for.pc.64bit.git"
+  },
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
     "build": "vite build --config vite.config.ts",
@@ -13,8 +17,8 @@
     "test": "vitest run --config vitest.config.ts",
     "electron:build:vite": "vite build --config vite.electron.config.ts",
     "electron:compile": "tsc --project tsconfig.electron.json",
-    "electron:build:win": "pnpm run electron:build:vite && pnpm run electron:compile && electron-builder --win --x64 --config electron-builder.json",
-    "electron:build:mac": "pnpm run electron:build:vite && pnpm run electron:compile && electron-builder --mac --config electron-builder.json",
+    "electron:build:win": "pnpm run electron:build:vite && pnpm run electron:compile && electron-builder --win --x64 --config electron-builder.json --publish never",
+    "electron:build:mac": "pnpm run electron:build:vite && pnpm run electron:compile && electron-builder --mac --config electron-builder.json --publish never",
     "cap:sync": "cap sync",
     "cap:android": "cap open android"
   },
@@ -24,6 +28,10 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@capacitor/android": "^7.4.2",
+    "@capacitor/cli": "^7.4.2",
+    "@capacitor/core": "^7.4.2",
+    "@capacitor/splash-screen": "^7.0.1",
     "@esbuild/win32-x64": "0.27.3",
     "@rollup/rollup-win32-x64-msvc": "4.62.3",
     "@tailwindcss/oxide-win32-x64-msvc": "4.3.3",
