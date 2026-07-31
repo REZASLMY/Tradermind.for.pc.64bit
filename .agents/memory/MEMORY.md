@@ -1,0 +1,1 @@
+- [Trader OS Windows Build Fix](traderos-windows-build.md) — pnpm workspace overrides block win32 native modules on Windows CI; must strip them before pnpm install
