@@ -1,0 +1,32 @@
+Run pnpm exec electron-builder --win --x64 --config electron-builder.json --publish never
+  • electron-builder  version=25.1.8 os=10.0.26100
+  • loaded configuration  file=D:\a\Tradermind.for.pc.64bit\Tradermind.for.pc.64bit\artifacts\tradermind\electron-builder.json
+  • author is missed in the package.json  appPackageFile=D:\a\Tradermind.for.pc.64bit\Tradermind.for.pc.64bit\artifacts\tradermind\package.json
+  • executing @electron/rebuild  electronVersion=36.9.5 arch=x64 buildFromSource=false appDir=./
+  • installing native dependencies  arch=x64
+  • completed installing native dependencies
+  • packaging       platform=win32 arch=x64 electron=36.9.5 appOutDir=dist-electron\win-unpacked
+  • downloading     url=https://github.com/electron/electron/releases/download/v36.9.5/electron-v36.9.5-win32-x64.zip size=122 MB parts=8
+  • downloaded      url=https://github.com/electron/electron/releases/download/v36.9.5/electron-v36.9.5-win32-x64.zip duration=431ms
+  • asar usage is disabled — this is strongly not recommended  solution=enable asar and use asarUnpack to unpack files that must be externally available
+  • asar usage is disabled — this is strongly not recommended  solution=enable asar and use asarUnpack to unpack files that must be externally available
+  • downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z size=5.6 MB parts=1
+  • downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z duration=236ms
+  • signing with signtool.exe  path=dist-electron\win-unpacked\Trader OS.exe
+  • no signing info identified, signing is skipped  signHook=false cscInfo=null
+  • building        target=nsis file=dist-electron\TraderOS-Setup-1.0.0.exe archs=x64 oneClick=false perMachine=false
+  • downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z size=1.3 MB parts=1
+  • downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z duration=165ms
+  • signing with signtool.exe  path=dist-electron\win-unpacked\resources\elevate.exe
+  • no signing info identified, signing is skipped  signHook=false cscInfo=null
+  ⨯ Language name is unknown for persianstandard  failedTask=build stackTrace=Error: Language name is unknown for persianstandard
+    at createAddLangsMacro (D:\a\Tradermind.for.pc.64bit\Tradermind.for.pc.64bit\node_modules\.pnpm\app-builder-lib@25.1.8_dmg-builder@25.1.8\node_modules\app-builder-lib\src\targets\nsis\nsisLang.ts:51:15)
+    at NsisTarget.computeCommonInstallerScriptHeader (D:\a\Tradermind.for.pc.64bit\Tradermind.for.pc.64bit\node_modules\.pnpm\app-builder-lib@25.1.8_dmg-builder@25.1.8\node_modules\app-builder-lib\src\targets\nsis\NsisTarget.ts:629:24)
+    at NsisTarget.buildInstaller (D:\a\Tradermind.for.pc.64bit\Tradermind.for.pc.64bit\node_modules\.pnpm\app-builder-lib@25.1.8_dmg-builder@25.1.8\node_modules\app-builder-lib\src\targets\nsis\NsisTarget.ts:320:37)
+    at NsisTarget.finishBuild (D:\a\Tradermind.for.pc.64bit\Tradermind.for.pc.64bit\node_modules\.pnpm\app-builder-lib@25.1.8_dmg-builder@25.1.8\node_modules\app-builder-lib\src\targets\nsis\NsisTarget.ts:138:9)
+    at Packager.doBuild (D:\a\Tradermind.for.pc.64bit\Tradermind.for.pc.64bit\node_modules\.pnpm\app-builder-lib@25.1.8_dmg-builder@25.1.8\node_modules\app-builder-lib\src\packager.ts:478:7)
+    at executeFinally (D:\a\Tradermind.for.pc.64bit\Tradermind.for.pc.64bit\node_modules\.pnpm\builder-util@25.1.7\node_modules\builder-util\src\promise.ts:12:14)
+    at Packager.build (D:\a\Tradermind.for.pc.64bit\Tradermind.for.pc.64bit\node_modules\.pnpm\app-builder-lib@25.1.8_dmg-builder@25.1.8\node_modules\app-builder-lib\src\packager.ts:393:31)
+    at executeFinally (D:\a\Tradermind.for.pc.64bit\Tradermind.for.pc.64bit\node_modules\.pnpm\builder-util@25.1.7\node_modules\builder-util\src\promise.ts:12:14)
+Error: Process completed with exit code 1.
+0s
