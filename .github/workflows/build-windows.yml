@@ -62,7 +62,7 @@ jobs:
       # On GitHub Actions (Windows runner) there is no firewall, so this installs fine.
       - name: Install Electron build tools (CI-only)
         working-directory: artifacts/tradermind
-        run: pnpm add --save-dev electron@^36.4.0 electron-builder@^25.1.8 --no-frozen-lockfile
+        run: pnpm add --save-dev electron@^36.4.0 electron-builder@^25.1.8
 
       - name: Build Vite (Electron config — no PORT/BASE_PATH required)
         working-directory: artifacts/tradermind
