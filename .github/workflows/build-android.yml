@@ -60,7 +60,14 @@ jobs:
       - name: Initialize Capacitor Android platform
         working-directory: artifacts/tradermind
         run: |
-          pnpm exec cap add android 2>/dev/null || echo "Android platform already exists, continuing"
+          # Only run "cap add android" if the android/ folder doesn't exist yet.
+          # In CI the folder is gitignored so it never exists; this guard is for safety.
+          if [ ! -d "android" ]; then
+            echo "Running cap add android..."
+            pnpm exec cap add android
+          else
+            echo "Android platform already exists, skipping cap add"
+          fi
           pnpm exec cap sync android
           echo "Capacitor sync complete"
 

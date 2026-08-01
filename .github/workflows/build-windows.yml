@@ -57,13 +57,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile=false --ignore-scripts=false
 
+      # Install Electron tools separately — they are NOT in package.json devDependencies
+      # because electron-builder pulls tar@6.x which is blocked by Replit's package firewall.
+      # On GitHub Actions (Windows runner) there is no firewall, so this installs fine.
+      - name: Install Electron build tools (CI-only)
+        working-directory: artifacts/tradermind
+        run: pnpm add --save-dev electron@^36.4.0 electron-builder@^25.1.8 --no-frozen-lockfile
+
       - name: Build Vite (Electron config — no PORT/BASE_PATH required)
         working-directory: artifacts/tradermind
         run: pnpm run electron:build:vite
 
-      - name: Compile Electron TypeScript
-        working-directory: artifacts/tradermind
-        run: pnpm run electron:compile
+      # NOTE: No TypeScript compile step needed — entry point is electron/main.cjs (CommonJS).
+      # Using .cjs avoids the "exports is not defined in ES module scope" crash caused by
+      # package.json having "type":"module" while tsc outputs CommonJS syntax to .js files.
 
       # --publish never: we upload manually via actions/upload-artifact below
       # repository field in package.json satisfies electron-builder's publish detection
