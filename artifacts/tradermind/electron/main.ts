@@ -33,13 +33,6 @@ function createWindow() {
     dialog.showErrorBox('Trader OS — Load Error', msg);
   });
 
-  // Show window after content is ready (no white flash)
-  win.once('ready-to-show', () => {
-    win.show();
-    // Open DevTools only in dev mode
-    if (isDev) win.webContents.openDevTools();
-  });
-
   // Open external links in system browser
   win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
