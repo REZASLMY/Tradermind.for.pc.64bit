@@ -32,13 +32,6 @@ function createWindow() {
       "Trader OS — Load Error",
       `Failed to load app:\n${indexPath}\n\nError: ${err.message}`
     );
-  });
-
-  // Show window only after content is ready (no white flash)
-  win.once("ready-to-show", () => {
-    win.show();
-    if (isDev) win.webContents.openDevTools();
-  });
 
   // Open external links in system browser
   win.webContents.setWindowOpenHandler(({ url }) => {
